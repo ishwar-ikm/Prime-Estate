@@ -30,7 +30,7 @@ function App() {
       </div>
     )
   }
-
+  
   return (
     <>
       <Navbar />
@@ -39,7 +39,7 @@ function App() {
         <Route path='/sign-in' element={!authUser ? <Signin /> : <Navigate to={"/"} />} />
         <Route path='/sign-up' element={!authUser ? <SignUp /> : <Navigate to={"/"} />} />
         <Route path='/about' element={<About />} />
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile' element={authUser ? <Profile /> : <Navigate to={"/sign-in"} />} />
       </Routes>
       <Toaster />
     </>

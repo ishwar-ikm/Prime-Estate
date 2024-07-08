@@ -1,8 +1,12 @@
 import React from 'react'
 import { FaSearch } from "react-icons/fa"
 import { Link } from 'react-router-dom'
+import { useQuery } from "@tanstack/react-query"
 
 const Navbar = () => {
+
+  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+
   return (
     <nav className='bg-slate-200 shadow-md'>
       <div className='flex justify-between items-center p-3 max-w-6xl mx-auto'>
@@ -24,8 +28,12 @@ const Navbar = () => {
           <Link to={"/about"}>
             <li className='hidden sm:inline text-slate-700 hover:underline'>About</li>
           </Link>
-          <Link to={"/sign-in"}>
+          <Link to={authUser ? "/profile" : "/sign-in"}>
+          {authUser ? (
+            <img className='rounded-full h-7 w-7 object-cover' src={authUser.avatar} alt="profile" />
+          ) : (
             <li className='text-slate-700 hover:underline'>Sign in</li>
+          )}
           </Link>
         </ul>
       </div>
