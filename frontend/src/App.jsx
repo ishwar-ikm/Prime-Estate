@@ -5,6 +5,7 @@ import About from './pages/About'
 import Profile from './pages/Profile'
 import Signin from './pages/Signin'
 import Navbar from './components/Navbar'
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/profile' element={<Profile />} />
       </Routes>  
+      <Toaster />
     </>
   )
 }
