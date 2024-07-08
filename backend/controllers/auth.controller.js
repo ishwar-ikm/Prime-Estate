@@ -78,3 +78,12 @@ export const signin = async (req, res, next) => {
     return next(errorHandler(500, "Internal server error"));
   }
 }
+
+export const getme = (req, res, next) => {
+  try {
+    return res.status(200).json(req.user);
+  } catch (error) {
+    console.log("Error in getme controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+}
