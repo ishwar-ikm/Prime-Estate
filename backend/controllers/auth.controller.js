@@ -1,6 +1,7 @@
 import User from "../model/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
+import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 
 export const signup = async (req, res, next) => {
   try {
@@ -52,3 +53,28 @@ export const signup = async (req, res, next) => {
     return next(errorHandler(500, "Internal server error"));
   }
 };
+
+export const signin = async (req, res, next) => {
+  const {username, password} = req.body;
+  try {
+    if(!username || !password) {
+      return next(errorHandler(400, "All fields are required"));
+    }
+    const user = await User.findOne({ username });
+    const isCorrectPassword = await bcryptjs.compare(password, user?.password || "");
+
+    if(!user || !isCorrectPassword) {
+      return next(errorHandler(401, "Invalid username or password"));
+    }
+
+    generateTokenAndSetCookie(user._id, res);
+
+    const {password: pass, ...restData} = user._doc;
+
+    res.status(200).json(restData);
+
+  } catch (error) {
+    console.log("Error in signup controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+}
