@@ -87,3 +87,37 @@ export const getme = (req, res, next) => {
     return next(errorHandler(500, "Internal server error"));
   }
 }
+
+export const google = async (req, res, next) => {
+  const {email, name, photo} = req.body;
+  try {
+    const user = await User.findOne({email});
+
+    if(user){
+      generateTokenAndSetCookie(user._id, res);
+      const {password: pass, ...restData} = user._doc;
+
+      res.status(200).json(restData);
+    }
+    else{
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
+
+      const newUser = new User({
+        username: name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
+        email,
+        password: hashedPassword,
+        avatar: photo
+      });
+
+      await newUser.save();
+
+      generateTokenAndSetCookie(newUser._id, res);
+      const {password: pass, ...restData} = newUser._doc;
+
+      res.status(200).json(restData);
+    }
+  } catch (error) {
+    
+  }
+}

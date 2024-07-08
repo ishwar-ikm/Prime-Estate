@@ -1,8 +1,9 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../components/skeletons/LoadingSpinner';
 import toast from 'react-hot-toast';
+import OAuth from '../components/OAuth';
 
 const Signin = () => {
 
@@ -10,6 +11,8 @@ const Signin = () => {
     username: "",
     password: ""
   });
+
+  const queryClient = useQueryClient(); 
 
   const navigate = useNavigate();
 
@@ -36,7 +39,7 @@ const Signin = () => {
         username: "",
         password: ""
       });
-      navigate("/");
+      queryClient.invalidateQueries({queryKey: ["authUser"]});
     },
     onError: (error) => {
       toast.error(error.message);
@@ -77,6 +80,8 @@ const Signin = () => {
         <button disabled={isPending} type='submit' className='bg-slate-700 p-2 rounded-md text-lg text-white capitalize hover:bg-slate-800 disabled:opacity-80 transition duration-200'>
           {isPending ? <LoadingSpinner /> : "Sign in"}
         </button>
+
+        <OAuth />
 
       </form>
       <div>

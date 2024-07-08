@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import toast from "react-hot-toast";
 import LoadingSpinner from "../components/skeletons/LoadingSpinner";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
 
@@ -101,7 +102,7 @@ const SignUp = () => {
         <button disabled={isPending} type='submit' className='bg-slate-700 p-2 rounded-md text-lg text-white capitalize hover:bg-slate-800 disabled:opacity-80 transition duration-200'>
           {isPending ? <LoadingSpinner /> : "Sign up"}
         </button>
-
+        <OAuth />
       </form>
       <div>
         <Link to={"/sign-in"}>
