@@ -2,6 +2,7 @@ import User from "../model/user.model.js";
 import { isValidEmail } from "../utils/checkValidEmail.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs"
+import { logout } from "./auth.controller.js";
 
 export const updateUser = async (req, res, next) => {
   try {
@@ -61,5 +62,22 @@ export const updateUser = async (req, res, next) => {
   } catch (error) {
     console.log("Error in updateUser", error.message);
     return next(errorHandler(500, "Internal server error"))
+  }
+}
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    if(id !== req.user._id.toString()){
+      return next(errorHandler(400, "You can only delete your account"));
+    }
+
+    await User.findByIdAndDelete(id);
+    res.cookie("jwt", "", {maxAge: 0});
+    return res.status(200).json({message: "Account Delete successfully"});
+
+  } catch (error) {
+    console.log("Error in deleteUser", error.message);
+    return next(errorHandler(500, "Internal server error"));
   }
 }

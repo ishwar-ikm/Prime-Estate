@@ -61,7 +61,7 @@ const Profile = () => {
       setUpdated(true);
     }
   })
-  
+
   const { mutate: updateUser, isPending } = useMutation({
     mutationFn: async () => {
       try {
@@ -82,8 +82,26 @@ const Profile = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["authUser"]});
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
       setUpdated(true)
+    }
+  })
+
+  const { mutate: deleteUser, isPending: deleting } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/user/delete/${authUser._id}`, {
+        method: "DELETE",
+      })
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
     }
   })
 
@@ -150,10 +168,16 @@ const Profile = () => {
       </form>
 
       <div className='flex justify-between mt-5 font-semibold'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
+        <span
+          className='text-red-700 cursor-pointer'
+          onClick={deleteUser}
+        >
+          {deleting ? "Deleting Account" : "Delete Account"}
+        </span>
+
         <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign Out</span>
       </div>
-      <p className='text-green-700 mt-3'>{updated && "User is updated successfully" }</p>
+      <p className='text-green-700 mt-3'>{updated && "User is updated successfully"}</p>
     </div>
   )
 }
