@@ -2,6 +2,7 @@ import User from "../model/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+import { isValidEmail } from "../utils/checkValidEmail.js";
 
 export const signup = async (req, res, next) => {
   try {
@@ -11,9 +12,8 @@ export const signup = async (req, res, next) => {
       return next(errorHandler(400, "All fields are required"));
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return next(errorHandler(400, "Invalid email format"));
+    if (!isValidEmail(email)) {
+      return next(errorHandler(400, "Invalid email"));
     }
 
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
