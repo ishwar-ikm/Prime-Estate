@@ -4,6 +4,7 @@ import connectToDB from "./db/connectToDB.js";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js"
+import userRoutes from "./routes/user.routes.js"
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 const PORT = process.env.PORT;
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
