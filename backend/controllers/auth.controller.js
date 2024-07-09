@@ -118,6 +118,17 @@ export const google = async (req, res, next) => {
       res.status(200).json(restData);
     }
   } catch (error) {
-    
+    console.log("Error in google controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+}
+
+export const logout = async (req, res, next) => {
+  try {
+    res.cookie("jwt", "", {maxAge: 0});
+    res.status(200).json({message: "Logged out successfully"})
+  } catch (error) {
+    console.log("Error in logout controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
   }
 }
