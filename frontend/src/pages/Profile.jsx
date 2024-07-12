@@ -4,7 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from '../firebase';
 import { toast } from "react-hot-toast"
 import LoadingSpinner from '../components/skeletons/LoadingSpinner';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -65,26 +65,25 @@ const Profile = () => {
 
   const { mutate: updateUser, isPending } = useMutation({
     mutationFn: async () => {
-      try {
-        const res = await fetch(`/api/user/update/${authUser._id}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData)
-        });
-        const data = await res.json();
+      const res = await fetch(`/api/user/update/${authUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
-      } catch (error) {
-        toast.error(error.message);
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong");
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       setUpdated(true)
+    },
+    onError: (error) => {
+      toast.error(error.message);
     }
   })
 
