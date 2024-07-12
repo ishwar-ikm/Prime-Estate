@@ -4,6 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from '../firebase';
 import { toast } from "react-hot-toast"
 import LoadingSpinner from '../components/skeletons/LoadingSpinner';
+import {Link} from "react-router-dom";
 
 const Profile = () => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -162,9 +163,13 @@ const Profile = () => {
           value={formData.password || ""}
         />
 
-        <button disabled={isPending} type='submit' className='bg-slate-700 p-2 rounded-md text-lg text-white capitalize hover:bg-slate-800 disabled:opacity-80 transition duration-200'>
+        <button disabled={isPending} type='submit' className='bg-slate-700 uppercase p-2 rounded-md text-lg text-white hover:bg-slate-800 disabled:opacity-80 transition duration-200'>
           {isPending ? <LoadingSpinner /> : "Update"}
         </button>
+
+        <Link to={"/create-listing"} className='bg-green-700 text-center uppercase p-2 rounded-md text-lg text-white hover:bg-green-800 disabled:opacity-80 transition duration-200'>
+          Create Listing
+        </Link>
       </form>
 
       <div className='flex justify-between mt-5 font-semibold'>

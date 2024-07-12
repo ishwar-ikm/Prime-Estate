@@ -8,6 +8,7 @@ import Navbar from './components/Navbar'
 import { Toaster } from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query'
 import LoadingSpinner from './components/skeletons/LoadingSpinner'
+import CreateListing from './pages/CreateListing'
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
         <Route path='/sign-up' element={!authUser ? <SignUp /> : <Navigate to={"/"} />} />
         <Route path='/about' element={<About />} />
         <Route path='/profile' element={authUser ? <Profile /> : <Navigate to={"/sign-in"} />} />
+        <Route path='/create-listing' element={authUser ? <CreateListing /> : <Navigate to={"/sign-in"} />} />
       </Routes>
       <Toaster />
     </>
