@@ -2,7 +2,7 @@ import User from "../model/user.model.js";
 import { isValidEmail } from "../utils/checkValidEmail.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs"
-import { logout } from "./auth.controller.js";
+import Listing from "../model/listing.model.js";
 
 export const updateUser = async (req, res, next) => {
   try {
@@ -75,6 +75,22 @@ export const deleteUser = async (req, res, next) => {
     await User.findByIdAndDelete(id);
     res.cookie("jwt", "", {maxAge: 0});
     return res.status(200).json({message: "Account Delete successfully"});
+
+  } catch (error) {
+    console.log("Error in deleteUser", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+}
+
+export const getListing = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    if(id !== req.user._id.toString()){
+      return next(errorHandler(400, "You can only view your own listings"));
+    }
+    
+    const listings = await Listing.find({userRef: id}).sort({createdAy: -1});
+    return res.status(200).json(listings);
 
   } catch (error) {
     console.log("Error in deleteUser", error.message);

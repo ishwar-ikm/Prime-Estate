@@ -1,9 +1,16 @@
+import e from "express";
 import Listing from "../model/listing.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createListing = async (req, res, next) => {
   try {
-    const listing = new Listing(req.body);
+    let listing;
+    if(!req.body.userRef){
+      listing = new Listing({...req.body, userRef: req.user._id});
+    }
+    else {
+      listing = new Listing({...req.body});
+    }
     await listing.save();
     return res.status(201).json(listing);
   } catch (error) {
