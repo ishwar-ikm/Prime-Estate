@@ -14,7 +14,8 @@ const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updated, setUpdated] = useState(false);
-  const [showListing, setShowListing] = useState(false);
+  const [getListing, setGetListing] = useState([]);
+  const [loadingGet, setLoadingGet] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -106,30 +107,26 @@ const Profile = () => {
     }
   })
 
-  const { data: getListing, isLoading: loadingGet, refetch, isRefetching } = useQuery({
-    queryKey: ["userListings"],
-    queryFn: async () => {
-      try {
-        const res = await fetch(`/api/user/listings/${authUser._id}`);
-        const data = res.json();
-
-        if (!res.ok) throw new Error(data.error || "Something went wrong");
-
-        return data;
-      } catch (error) {
-        toast.error(error.message);
-      }
-    },
-    enabled: showListing
-  })
-
   const handleSubmit = (e) => {
     e.preventDefault();
     updateUser();
   }
 
-  const handleShowListing = (e) => {
-    setShowListing(!showListing);
+  const handleShowListing = async () => {
+    setLoadingGet(true);
+    try {
+      const res = await fetch(`/api/user/listings/${authUser._id}`);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
+
+      setGetListing(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+    finally{
+      setLoadingGet(false);
+    }
   }
 
   const {mutate:deleteList, isPending: deletingList} = useMutation({
@@ -142,7 +139,7 @@ const Profile = () => {
       if(!res.ok) throw new Error(data.error || "Something went wrong");
     },
     onSuccess: () => {
-      refetch();
+      handleShowListing();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -224,12 +221,12 @@ const Profile = () => {
 
       <button onClick={handleShowListing} className='text-green-700 w-full'>Show Listings</button>
 
-      {(loadingGet || isRefetching) && 
+      {loadingGet && 
         <div className='mt-4 flex justify-center items-center'>
           <LoadingSpinner size='lg' />
         </div>
       }
-      {!loadingGet && !isRefetching && getListing && getListing.length > 0 &&
+      {!loadingGet && getListing && getListing.length > 0 &&
         <div className='flex flex-col gap-4'>
           <h1 className='text-center my-7 text-2xl font-semibold'>Your Listing</h1>
           {getListing.map(listing => {
@@ -243,7 +240,7 @@ const Profile = () => {
 
               <div className='flex flex-col items-center'>
                 <button onClick={() => deleteList(listing._id)} className='text-red-700'>Delete</button>
-                <button className='text-green-700'>Edit</button>
+                <Link to={`/update-listing/${listing._id}`} className='text-green-700'>Edit</Link>
               </div>
             </div>
           })}

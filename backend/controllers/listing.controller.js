@@ -46,3 +46,47 @@ export const deleletListing = async (req, res, next) => {
     return next(errorHandler(500, "Internal server error"));
   }
 };
+
+export const updateListing = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const userId = req.user._id;
+
+    const listing = await Listing.findById(id);
+    if(!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+
+    if(userId.toString() !== listing.userRef.toString()){
+      return next(errorHandler(400, "You can only update your listings"));
+    }
+
+    const updatedListing = await Listing.findByIdAndUpdate(
+      id,
+      req.body,
+      {new: true}
+    )
+
+    return res.status(200).json(updatedListing);
+  } catch (error) {
+    console.log("Error in updateListing controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+};
+
+export const getList = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const userId = req.user._id;
+
+    const listing = await Listing.findById(id);
+    if(!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+
+    return res.status(200).json(listing);
+  } catch (error) {
+    console.log("Error in updateListing controller:", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+};
