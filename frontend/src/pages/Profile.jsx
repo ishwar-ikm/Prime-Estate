@@ -106,7 +106,7 @@ const Profile = () => {
     }
   })
 
-  const { data: getListing, isLoading: loadingGet } = useQuery({
+  const { data: getListing, isLoading: loadingGet, refetch, isRefetching } = useQuery({
     queryKey: ["userListings"],
     queryFn: async () => {
       try {
@@ -131,6 +131,23 @@ const Profile = () => {
   const handleShowListing = (e) => {
     setShowListing(!showListing);
   }
+
+  const {mutate:deleteList, isPending: deletingList} = useMutation({
+    mutationFn: async (id) => {
+      const res = await fetch(`/api/listing/delete/${id}`, {
+        method: "DELETE"
+      })
+      const data = await res.json();
+
+      if(!res.ok) throw new Error(data.error || "Something went wrong");
+    },
+    onSuccess: () => {
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  })
 
   return (
     <div className='p-3 max-w-lg mx-auto'>
@@ -207,12 +224,12 @@ const Profile = () => {
 
       <button onClick={handleShowListing} className='text-green-700 w-full'>Show Listings</button>
 
-      {loadingGet && 
+      {(loadingGet || isRefetching) && 
         <div className='mt-4 flex justify-center items-center'>
           <LoadingSpinner size='lg' />
         </div>
       }
-      {getListing && getListing.length > 0 &&
+      {!loadingGet && !isRefetching && getListing && getListing.length > 0 &&
         <div className='flex flex-col gap-4'>
           <h1 className='text-center my-7 text-2xl font-semibold'>Your Listing</h1>
           {getListing.map(listing => {
@@ -225,7 +242,7 @@ const Profile = () => {
               </Link>
 
               <div className='flex flex-col items-center'>
-                <button className='text-red-700'>Delete</button>
+                <button onClick={() => deleteList(listing._id)} className='text-red-700'>Delete</button>
                 <button className='text-green-700'>Edit</button>
               </div>
             </div>
