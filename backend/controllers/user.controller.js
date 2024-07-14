@@ -97,3 +97,20 @@ export const getListing = async (req, res, next) => {
     return next(errorHandler(500, "Internal server error"));
   }
 }
+
+export const getUser = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const user = await User.findById(id).select("-password");
+
+    if(!user) {
+      return next(404, "User not found")
+    }
+
+    return res.status(200).json(user);
+
+  } catch (error) {
+    console.log("Error in getUser", error.message);
+    return next(errorHandler(500, "Internal server error"));
+  }
+}

@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query'
 import LoadingSpinner from './components/skeletons/LoadingSpinner'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
+import Listing from './pages/Listing'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
         <Route path='/sign-in' element={!authUser ? <Signin /> : <Navigate to={"/"} />} />
         <Route path='/sign-up' element={!authUser ? <SignUp /> : <Navigate to={"/"} />} />
         <Route path='/about' element={<About />} />
+        <Route path='/listing/:id' element={<Listing />} />
         <Route path='/profile' element={authUser ? <Profile /> : <Navigate to={"/sign-in"} />} />
         <Route path='/create-listing' element={authUser ? <CreateListing /> : <Navigate to={"/sign-in"} />} />
         <Route path='/update-listing/:id' element={authUser ? <UpdateListing /> : <Navigate to={"/sign-in"} />} />

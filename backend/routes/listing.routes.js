@@ -4,7 +4,7 @@ import { createListing, deleletListing, getList, updateListing } from "../contro
 
 const router = express.Router();
 
-router.get("/list/:id", protectRoutes, getList);
+router.get("/list/:id", getList);
 router.post("/create", protectRoutes, createListing);
 router.delete("/delete/:id", protectRoutes, deleletListing);
 router.post("/update/:id", protectRoutes, updateListing);
