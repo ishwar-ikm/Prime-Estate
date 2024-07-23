@@ -68,8 +68,8 @@ const Listings = () => {
         <h1 className='text-2xl md:text-4xl font-semibold'>
           <span className='capitalize'>{listing.name}</span> -{' '}
           {listing.type === 'rent'
-            ? `₹${listing.regularPrice} per month`
-            : `₹${listing.regularPrice}`}
+            ? `₹${listing.regularPrice.toLocaleString('en-IN')} per month`
+            : `₹${listing.regularPrice.toLocaleString('en-IN')}`}
         </h1>
 
         <div className='flex flex-col gap-2'>
@@ -83,7 +83,7 @@ const Listings = () => {
             </p>
             {listing.offer && (
               <p className='bg-green-700 py-2 w-[40%] md:w-[20%] capitalize rounded-md text-center'>
-                ₹{listing.discountPrice} discount
+                ₹{(+listing.regularPrice - +listing.discountPrice).toLocaleString('en-IN')} discount
               </p>
             )}
           </div>

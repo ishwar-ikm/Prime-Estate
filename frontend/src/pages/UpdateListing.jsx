@@ -332,7 +332,7 @@ const UpdateListing = () => {
                   required
                 />
                 <div className='flex flex-col items-center'>
-                  <p>Discount Price</p>
+                  <p>Discounted Price</p>
                   {formData.type === "rent" &&
                     <p className='text-xs'>(₹/month)</p>
                   }

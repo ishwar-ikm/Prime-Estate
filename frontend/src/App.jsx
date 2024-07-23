@@ -11,6 +11,7 @@ import LoadingSpinner from './components/skeletons/LoadingSpinner'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
 import Listing from './pages/Listing'
+import Search from './pages/Search'
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/search' element={<Search />} />
         <Route path='/sign-in' element={!authUser ? <Signin /> : <Navigate to={"/"} />} />
         <Route path='/sign-up' element={!authUser ? <SignUp /> : <Navigate to={"/"} />} />
         <Route path='/about' element={<About />} />
