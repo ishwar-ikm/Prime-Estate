@@ -52,7 +52,6 @@ const UpdateListing = () => {
           parking: data.parking,
           furnished: data.furnished,
         })
-        console.log(data);
       } catch (error) {
         navigate("/profile");
       }
