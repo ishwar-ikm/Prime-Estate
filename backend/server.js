@@ -2,6 +2,7 @@ import express, { json, urlencoded } from "express";
 import dotenv from "dotenv"
 import connectToDB from "./db/connectToDB.js";
 import cookieParser from "cookie-parser";
+import path from "path"
 
 import authRoutes from "./routes/auth.routes.js"
 import userRoutes from "./routes/user.routes.js"
@@ -15,6 +16,7 @@ app.use(urlencoded({ extended: true }))
 app.use(cookieParser());
 
 const PORT = process.env.PORT;
+const __dirname = path.resolve();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -28,6 +30,14 @@ app.use((err, req, res, next) => {
     error: message
   });
 })
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+      res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  })
+}
 
 app.listen(PORT, () => {
   console.log(`Listening to port ${PORT}`);
