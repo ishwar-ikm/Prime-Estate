@@ -1,65 +1,159 @@
-# Real Estate Project
+# Real Estate Application
 
-## Introduction
+## Project Overview
 
-This real estate project is under development, which allows users to view and manage real estate properties. The project includes a backend server and a frontend client.
+This project is a full-stack web application for a real estate platform called **Prime Estate**. It allows users to browse, create, update, and manage property listings. Users can also contact landlords for more information about the properties. The application is built using the MERN stack (MongoDB, Express, React, Node.js) and integrates with Firebase and JWT for authentication.
 
-## Getting Started
+## Project Structure
 
-### Installation
+### Backend
 
-1. Install backend dependencies:
+- **controllers**
+  - **auth.controller.js**: Handles user authentication (sign-up, login).
+  - **listing.controller.js**: Manages CRUD operations for property listings.
+  - **user.controller.js**: Manages user-related operations (e.g., retrieving user information).
 
+- **db**
+  - Contains database connection configurations.
+
+- **middleware**
+  - Middleware functions (e.g., authentication checks).
+
+- **model**
+  - **listing.model.js**: Mongoose schema and model for property listings.
+  - **user.model.js**: Mongoose schema and model for user information.
+
+- **routes**
+  - Defines API routes and maps them to corresponding controller functions.
+
+- **utils**
+  - Utility functions used throughout the backend.
+
+- **server.js**
+  - Entry point for the backend server.
+
+### Frontend
+
+- **src**
+  - **components**
+    - **skeletons**
+      - **CardSkeleton.jsx**: Skeleton loader for cards.
+      - **LoadingSpinner.jsx**: Spinner for loading states.
+    - **Contact.jsx**: Component for contacting landlords.
+    - **ListingItem.jsx**: Component to display a single listing item.
+    - **Navbar.jsx**: Navigation bar component.
+    - **OAuth.jsx**: OAuth integration component.
+
+  - **pages**
+    - **CreateListing.jsx**: Page for creating a new listing.
+    - **Home.jsx**: Homepage of the application.
+    - **Listing.jsx**: Detailed page for a single listing.
+    - **Profile.jsx**: User profile page.
+    - **Search.jsx**: Search results page.
+    - **Signin.jsx**: Sign-in page.
+    - **SignUp.jsx**: Sign-up page.
+    - **UpdateListing.jsx**: Page for updating an existing listing.
+
+  - **firebase.js**
+    - Firebase configuration and initialization.
+
+  - **main.jsx**
+    - Entry point for the React application.
+
+- **index.html**
+  - Main HTML file for the application.
+
+- **package.json**
+  - Dependencies and project scripts.
+
+## Setup and Installation
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- MongoDB
+- Firebase account
+
+### Backend Setup
+
+1. Clone the repository:
+
+2. Install backend dependencies in `root` directory:
    ```sh
    npm install
    ```
 
-2. Change to the frontend directory and install frontend dependencies:
+3. Create a `.env` file in the `root` directory and add your environment variables:
+   ```
+   PORT=your_port_number
+   MONGODB_URI=your_mongodb_uri
+   JWT_SECRET=your_jwt_secret
+   NODE_ENV=development
+   ```
 
+4. Start the backend server:
+   ```sh
+   npm run dev
+   ```
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
    ```sh
    cd frontend
+   ```
+
+2. Install frontend dependencies:
+   ```sh
    npm install
    ```
 
-### Running the Project
+3. Create a `.env` file in the `frontend` directory and add your environment variables:
+   ```
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   VITE_FIREBASE_APP_ID=your_firebase_app_id
+   ```
 
-1. Start the backend server:
-
+4. Start the frontend development server:
    ```sh
    npm run dev
    ```
 
-2. In a new terminal window, start the frontend development server:
+## Usage
 
-   ```sh
-   cd frontend
-   npm run dev
-   ```
+- Visit `http://localhost:5000` in your browser to view the application.
+- Use the navigation bar to browse different pages.
+- Sign up or sign in to create, update, or delete listings.
+- Browse listings and contact landlords using the contact form on each listing's detail page.
 
-3. The backend server will run on `http://localhost:3000` and the frontend will be available on `http://localhost:5000`.
+## Features
 
-## Environment Variables
+- **User Authentication**: Users can sign up and log in using email/password or OAuth.
+- **Property Listings**: Users can create, update, delete, and view property listings.
+- **Search Functionality**: Users can search for properties based on various criteria.
+- **Contact Landlords**: Users can contact landlords directly from the listing page.
+- **Responsive Design**: The application is mobile-friendly and works well on all devices.
 
-Set the following environment variables for the project:
+## Technologies Used
 
-### In the Root Directory
+- **Frontend**: React, Tailwind CSS, Swiper, React Icons, React Router, React Query
+- **Backend**: Node.js, Express, MongoDB, Mongoose
+- **Authentication**: Firebase and JWT Authentication
+- **Build Tool**: Vite
 
-Create a `.env` file in the root directory and add the following:
+## Screenshots
 
-```env
-PORT=3000
-MONGO_URI=YOUR MONGODB DATABASE URI
-JWT_SECRET=YOUR JWT SECRET
-NODE_ENV=development
-```
+### Sign Up
+![signup](screenshots/signup.png)
 
-### In the Frontend Directory
+### Home
+![Home](screenshots/home.png)
 
-Create a `.env` file in the `frontend` directory and add the following:
+### Search
+![notifications](screenshots/search.png)
 
-```env
-VITE_FIREBASE_API_KEY=YOUR FIREBASE APIKEY
-VITE_FIREBASE_APP_ID=YOUR FIREBASE APPID
-```
+### Profile
+![profile](screenshots/profile.png)
 
-configure your own firebase and add to `frontend/src/firebase.js`;
+### Create
+![search](screenshots/create.png)
