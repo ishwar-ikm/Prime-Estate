@@ -1,32 +1,33 @@
-import {Link} from "react-router-dom"
-import {useQuery} from "@tanstack/react-query"
+import { Link } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import 'swiper/css/bundle';
 import ListingItem from "../components/ListingItem";
+import CardSkeleton from "../components/skeletons/CardSkeleton"
 
 const Home = () => {
 
   SwiperCore.use([Navigation]);
- 
-  const {data:offerListings, isLoading:loadingOffer} = useQuery({
+
+  const { data: offerListings, isLoading: loadingOffer } = useQuery({
     queryKey: ['offerListings'],
     queryFn: async () => {
       const res = await fetch('/api/listing/get?offer=true&limit=4');
       return res.json();
     }
   })
- 
-  const {data:saleListings, isLoading:loadingSale} = useQuery({
+
+  const { data: saleListings, isLoading: loadingSale } = useQuery({
     queryKey: ['saleListings'],
     queryFn: async () => {
       const res = await fetch('/api/listing/get?type=sale&limit=4');
       return res.json();
     }
   })
- 
-  const {data:rentListings, isLoading:loadingRent} = useQuery({
+
+  const { data: rentListings, isLoading: loadingRent } = useQuery({
     queryKey: ['rentListings'],
     queryFn: async () => {
       const res = await fetch('/api/listing/get?type=rent&limit=4');
@@ -54,23 +55,30 @@ const Home = () => {
         </Link>
       </div>
 
-
-      <Swiper navigation>
-        {offerListings &&
-          offerListings.length > 0 &&
-          offerListings.map((listing) => (
-            <SwiperSlide key={listing._id}>
-              <div
-                style={{
-                  background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: 'cover',
-                }}
-                className='h-[500px]'
-                key={listing._id}
-              ></div>
-            </SwiperSlide>
-          ))}
-      </Swiper>
+      <div>
+        {
+          loadingOffer ? (
+            <div className='skeleton h-[500px]'></div>
+          ) : (
+            <Swiper navigation>
+              {offerListings &&
+                offerListings.length > 0 &&
+                offerListings.map((listing) => (
+                  <SwiperSlide key={listing._id}>
+                    <div
+                      style={{
+                        background: `url(${listing.imageUrls[0]}) center no-repeat`,
+                        backgroundSize: 'cover',
+                      }}
+                      className='h-[500px]'
+                      key={listing._id}
+                    ></div>
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+          )
+        }
+      </div>
 
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {offerListings && offerListings.length > 0 && (
@@ -80,9 +88,19 @@ const Home = () => {
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?offer=true'}>Show more offers</Link>
             </div>
             <div className='flex flex-wrap gap-4'>
-              {offerListings.map((listing) => (
-                <ListingItem listing={listing} key={listing._id} />
-              ))}
+              {loadingOffer ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : (
+                offerListings.map((listing) => (
+                  <ListingItem listing={listing} key={listing._id} />
+                ))
+              )}
+
             </div>
           </div>
         )}
@@ -93,9 +111,20 @@ const Home = () => {
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=rent'}>Show more places for rent</Link>
             </div>
             <div className='flex flex-wrap gap-4'>
-              {rentListings.map((listing) => (
-                <ListingItem listing={listing} key={listing._id} />
-              ))}
+
+              {loadingRent ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : (
+                rentListings.map((listing) => (
+                  <ListingItem listing={listing} key={listing._id} />
+                ))
+              )}
+
             </div>
           </div>
         )}
@@ -106,9 +135,19 @@ const Home = () => {
               <Link className='text-sm text-blue-800 hover:underline' to={'/search?type=sale'}>Show more places for sale</Link>
             </div>
             <div className='flex flex-wrap gap-4'>
-              {saleListings.map((listing) => (
-                <ListingItem listing={listing} key={listing._id} />
-              ))}
+
+              {loadingSale ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : (
+                saleListings.map((listing) => (
+                  <ListingItem listing={listing} key={listing._id} />
+                ))
+              )}
             </div>
           </div>
         )}

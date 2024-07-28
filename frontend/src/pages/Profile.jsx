@@ -14,7 +14,7 @@ const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updated, setUpdated] = useState(false);
-  const [getListing, setGetListing] = useState([]);
+  const [getListing, setGetListing] = useState(null);
   const [loadingGet, setLoadingGet] = useState(false);
 
   const queryClient = useQueryClient();
@@ -124,19 +124,19 @@ const Profile = () => {
     } catch (error) {
       toast.error(error.message);
     }
-    finally{
+    finally {
       setLoadingGet(false);
     }
   }
 
-  const {mutate:deleteList, isPending: deletingList} = useMutation({
+  const { mutate: deleteList, isPending: deletingList } = useMutation({
     mutationFn: async (id) => {
       const res = await fetch(`/api/listing/delete/${id}`, {
         method: "DELETE"
       })
       const data = await res.json();
 
-      if(!res.ok) throw new Error(data.error || "Something went wrong");
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
     },
     onSuccess: () => {
       handleShowListing();
@@ -221,29 +221,34 @@ const Profile = () => {
 
       <button onClick={handleShowListing} className='text-green-700 w-full'>Show Listings</button>
 
-      {loadingGet && 
+      {loadingGet &&
         <div className='mt-4 flex justify-center items-center'>
           <LoadingSpinner size='lg' />
         </div>
       }
-      {!loadingGet && getListing && getListing.length > 0 &&
+      {!loadingGet && getListing &&
         <div className='flex flex-col gap-4'>
-          <h1 className='text-center my-7 text-2xl font-semibold'>Your Listing</h1>
-          {getListing.map(listing => {
-            return <div key={listing._id} className='border rounded-lg p-3 flex gap-4 justify-between items-center'>
-              <Link to={`/listing/${listing._id}`}>
-                <img src={listing.imageUrls[0]} alt="listing image" className='h-16 w-16 object-contain' />
-              </Link>
-              <Link to={`/listing/${listing._id}`} className='flex-1 text-slate-600 font-semibold hover:underline truncate'>
-                <p>{listing.name}</p>
-              </Link>
+          {getListing.length == 0 ?
+            <h1 className='text-center my-7 text-2xl font-semibold'>No lsitings made by you</h1> :
+            <>
+              <h1 className='text-center my-7 text-2xl font-semibold'>Your Listing</h1>
+              {getListing.map(listing => {
+                return <div key={listing._id} className='border rounded-lg p-3 flex gap-4 justify-between items-center'>
+                  <Link to={`/listing/${listing._id}`}>
+                    <img src={listing.imageUrls[0]} alt="listing image" className='h-16 w-16 object-contain' />
+                  </Link>
+                  <Link to={`/listing/${listing._id}`} className='flex-1 text-slate-600 font-semibold hover:underline truncate'>
+                    <p>{listing.name}</p>
+                  </Link>
 
-              <div className='flex flex-col items-center'>
-                <button onClick={() => deleteList(listing._id)} className='text-red-700'>Delete</button>
-                <Link to={`/update-listing/${listing._id}`} className='text-green-700'>Edit</Link>
-              </div>
-            </div>
-          })}
+                  <div className='flex flex-col items-center'>
+                    <button onClick={() => deleteList(listing._id)} className='text-red-700'>Delete</button>
+                    <Link to={`/update-listing/${listing._id}`} className='text-green-700'>Edit</Link>
+                  </div>
+                </div>
+              })}
+            </>
+          }
         </div>
       }
     </div>

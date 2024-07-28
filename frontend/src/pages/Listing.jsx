@@ -20,7 +20,7 @@ const Listings = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: listing, isLoading } = useQuery({
+  const { data: listing, isLoading, isRefetching } = useQuery({
     queryKey: ['listing'],
     queryFn: async () => {
       try {
@@ -36,7 +36,7 @@ const Listings = () => {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isRefetching) {
     return (
       <div className='flex justify-center items-center min-h-screen'>
         <LoadingSpinner size={'lg'} />

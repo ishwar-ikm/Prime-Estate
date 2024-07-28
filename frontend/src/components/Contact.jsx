@@ -15,7 +15,6 @@ const Contact = ({ listing }) => {
 
         if (!res.ok) throw new Error(data.errro || "Something went wrong");
 
-        console.log(`to=${landlord.email}&subject=Regarding ${listing.name}&body=${message}`);
         return data;
       } catch (error) {
         toast.error(error.message);
